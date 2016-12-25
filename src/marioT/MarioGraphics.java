@@ -16,15 +16,19 @@ public class MarioGraphics extends JPanel {
     Image[] runnerImage;
     Image[] obstacleImages;
     Image mainMenuImage;
+    Image congr;
+    Image die;
 
     public MarioGraphics() {
-        gameObjectImage = new Image[11];
+        gameObjectImage = new Image[12];
         coins = new Image[1];
-        obstacleImages = new Image[11];
+        obstacleImages = new Image[12];
         runnerImage = new Image[12];
         try {
             sprite = ImageIO.read(new File("images/sprite.png"));
             mainMenuImage = ImageIO.read(new File("images/MainMenu.png"));
+            congr = ImageIO.read(new File("images/congr.png"));
+            die = ImageIO.read(new File("images/gameover.jpg"));
             runnerImage[0] = ImageIO.read(new File("images/1.png"));
             runnerImage[1] = ImageIO.read(new File("images/2.png"));
             runnerImage[2] = ImageIO.read(new File("images/3.png"));
@@ -48,6 +52,7 @@ public class MarioGraphics extends JPanel {
             obstacleImages[8] = ImageIO.read(new File("images/Coin.png"));
             obstacleImages[9] = ImageIO.read(new File("images/tunnel2.png"));
             obstacleImages[10] = ImageIO.read(new File("images/GreenGrass.jpg"));
+            obstacleImages[11] = ImageIO.read(new File("images/flag.png"));
             characterImage = ImageIO.read(new File("images/__Pink-Ranger.png"));
 
         } catch (IOException e) {
@@ -62,10 +67,25 @@ public class MarioGraphics extends JPanel {
         super.paint(g);
 
         if (gameLogic.mainHero.position.x == 200) {
+            
             g.drawImage(mainMenuImage,
                     0, 0, g.getClipBounds().width, g.getClipBounds().height,
                     0, 0, mainMenuImage.getWidth(null), mainMenuImage.getHeight(null), null);
-        } else {
+
+        } else if (gameLogic.mainHero.position.y >= 800) {
+            
+            g.drawImage(die,
+                    0, 0, g.getClipBounds().width, g.getClipBounds().height,
+                    0, 0, die.getWidth(null), die.getHeight(null), null);
+
+        } 
+        else if (gameLogic.mainHero.position.x >= 5800) {
+            g.drawImage(congr,
+                    0, 0, g.getClipBounds().width, g.getClipBounds().height,
+                    0, 0, congr.getWidth(null), congr.getHeight(null), null);
+            gameLogic.mainHero.position.x ++;
+        }
+        else {
             g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
             int fromX = 0;
             int toX = 0;
@@ -73,10 +93,8 @@ public class MarioGraphics extends JPanel {
 
             for (GameObjects gameObject : gameLogic.gameObjects) {
                 Image toDraw1;
-                if (!gameObject.visible) {
-                    continue;
-                }
-                if (gameObject.getImageNo() == 0) {
+                if (!gameObject.visible) continue;
+                if (gameObject instanceof MainHero) {
                     //toDraw1 = sprite;
                     toDraw1 = characterImage;
                         imX1 = 0;
@@ -84,24 +102,21 @@ public class MarioGraphics extends JPanel {
                         imX2 = toDraw1.getWidth(null);
                         imY2 = toDraw1.getHeight(null); 
                     if (gameLogic.mainHero.dx != 0) {
-                        gameLogic.mainHero.currentImage = (gameLogic.mainHero.currentImage + 1) % runnerImage.length;
+                        gameLogic.mainHero.currentImage = (gameLogic.mainHero.currentImage + 1) % 8;
                         //toDraw1 = runnerImage[gameLogic.mainHero.currentImage];
+                        int row = gameLogic.mainHero.dx > 0 ? 0 : 1; // direction
+                        int col = gameLogic.mainHero.currentImage ;
                         
                         toDraw1 = sprite;
-                        imX1 = 3*toDraw1.getWidth(null)/8;
-                        imY1 = toDraw1.getHeight(null)/2;
-                        imX2 = imX1 + toDraw1.getWidth(null)/8;
-                        imY2 = imY1 + toDraw1.getHeight(null)/8;
+                        imX1 = 108 * col;//toDraw1.getWidth(null)/8;
+                        imY1 = 140 * row;//toDraw1.getHeight(null)/2;
+                        imX2 = imX1 + 108;//toDraw1.getWidth(null)/8;
+                        imY2 = imY1 + 140;//toDraw1.getHeight(null)/8;
                         
                     }
                     fromX = gameLogic.mainHero.position.x + gameLogic.backPosition;
                     toX = gameLogic.mainHero.position.x + gameLogic.mainHero.position.width + gameLogic.backPosition;
 
-//                    if (gameLogic.mainHero.dx < 0) {
-//                        int k = fromX;
-//                        fromX = toX;
-//                        toX = k;
-//                    }
                 } else {
 
                     toDraw1 = obstacleImages[gameObject.getImageNo()];
@@ -123,6 +138,5 @@ public class MarioGraphics extends JPanel {
                 );
             }
         }
-
     }
 }

@@ -15,7 +15,7 @@ public class MainMenu extends Menu
 {
     public MainMenu(GameLogic gameLogic)
     {
-        super(gameLogic, "/images/MainMenu.png");
+        super(gameLogic);
     }
 
     public void execute()
@@ -26,10 +26,8 @@ public class MainMenu extends Menu
                 gameLogic.startNewGame();
                 break;
             case 2:
-                break;
-            case 3:
                 gameLogic.exit();
-                  break;
+                break;
         }
     }
 }

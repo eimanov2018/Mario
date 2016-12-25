@@ -45,9 +45,9 @@ public static void exit(){
         "0000000000000000C0000C0C00000000000000000000 00000000 00000000000?0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000bbbb00000000000033333330",
         "0000000000000000?0003?3?300CCC00000000000000s0CCCCCC0s0000000000000000000000033300000000000000300000330000?00?00?0000030000000000330000000b00b0000000000bb00b00000000000033?30000000bbbbb00000000000033303330",
         "0000000000000000000000000000000000000d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000bb00bb00000000bbb00bb000000000000000000000bbbbbb00000000000033303330",
-        "0000000000000000000000000000t00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000bbb00bbb000000bbbb00bbb00000t0000000000t00bbbbbbb00000000000033303330",
-        "000220020002000200202220000000020002000220000002220000002022200000020000000220000002220 02002200222000220002200000000000000000000000000bbbb00bbbb0000bbbbb00bbbb00000000000000000bbbbbbbb00000000b00033303330",
-        "1111111111111111111111111111111111111111111111111111111111111111111111GG1111111111111100011111111111111111111111111111111111111111111111111111111111111111  1111111111111111111111111111111111111111111111111",
+        "0000000000000000000000000000t00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000bbb00bbb000000bbbb00bbb00000t0000000000t00bbbbbbb00000000F00033303330",
+        "0002200200020002002022200000000200020 0220000002220000002022200000020000000220000002220 02002200222000220002200000000000000000000000000bbbb00bbbb0000bbbbb00bbbb00000000000000000bbbbbbbb00000000b00033303330",
+        "1111111111111111111111111111111111111111111111111111111111111111111111GG1111111111111100011111111111111111111111111111111111111111111111111111111111111111t 1111111111111111111111111111111111111111111111111",
         "1111111111111111111111111111111111111111111111111111111111111111111111GG1111111111111100011111111111111111111111111111111111111111111111111111111111111111  1111111111111111111111111111111111111111111111111",
         "                                                          30003333333      3",
         "                                                          3000 CCCCCCCCCC  3",
@@ -71,8 +71,8 @@ public static void exit(){
         for(int i = 0; i<level1.length;i++){
             String line = level1[i];
             for(int j = 0; j<line.length();j++){
+                System.out.println(line.length());
                 switch (line.substring(j, j+1)) {
-                    
                     
                     case "?" : obstacles.add(new Obstacle( j*30, i*30, 30, 30, 1)); break;
                     case "1" : obstacles.add(new Obstacle(j*30,i*30,30,30,2)); break;
@@ -83,6 +83,8 @@ public static void exit(){
                     case "s" : obstacles.add(new Obstacle( j*30, i*30, 60, 120,5)); break;
                     case "T" : obstacles.add(new Obstacle((j-1)*30-10, i*30, 160, 60, 9)); break;
                     case "G" : obstacles.add(new Obstacle( j*30, i*30, 30, 30,10)); break;
+                    case "F" : obstacles.add(new Obstacle( j*30-5, (i-5)*30, 30, 180,11)); break;
+
 
                     case "c" : clouds.add(new Clouds( j*30, i*30, 30, 30, 6)); break;
                     case "2" : clouds.add(new Clouds( j*30, i*30, 30, 30, 7)); break;
@@ -112,13 +114,10 @@ public static void exit(){
 //                gameObject.update(this);
 //            }
             if(mainHero.position.x + backPosition > 1000){
-              //  System.out.println(backPosition);
                 backPosition = backPosition - (mainHero.position.x+backPosition-1000);
-              //  System.out.println(backPosition);
             }
             if(mainHero.position.x + backPosition < 100){
                 backPosition = backPosition + (100 - (mainHero.position.x+backPosition));
-               // System.out.println(backPosition);
             }
             
         }
@@ -133,12 +132,14 @@ public static void exit(){
             if ((e.getKeyCode() == 38 || e.getKeyCode()==87 || e.getKeyCode()==32) && !mainHero.jumping) {
              int jump = -14;
              mainHero.dy = jump;
-             Sounds.playSound("jump.wav");
+             Sounds.playSound("jump.mp3");
              System.out.println(mainHero.dy);
              mainHero.jumping = true;
             }
             
             if (e.getKeyCode() == 37 || e.getKeyCode()==65) {
+                mainHero.stateGame.goingLeft = true;
+
                if(!mainHero.nitro) mainHero.dx = -8;
                else { 
                    int i;
@@ -149,6 +150,8 @@ public static void exit(){
             }
             if (e.getKeyCode()==16) mainHero.nitro = true;
             if (e.getKeyCode() == 39 || e.getKeyCode()==68) {
+                mainHero.stateGame.goingRight = true;
+
                 if(!mainHero.nitro) mainHero.dx = 15;
                 else {
                     int i;
@@ -176,8 +179,12 @@ public static void exit(){
             if (e.getKeyCode() == 37 ||
                     e.getKeyCode() == 39 || 
                     e.getKeyCode()==65 ||
-                    e.getKeyCode()==68)
+                    e.getKeyCode()==68) {
                 mainHero.dx = 0;
+                mainHero.stateGame.goingRight = false;
+                mainHero.stateGame.goingLeft = false;
+
+            }
             if (e.getKeyCode() == 16)
                 mainHero.nitro = false;
             if((e.getKeyCode() == 40 || e.getKeyCode() == 83) && isSit){ 

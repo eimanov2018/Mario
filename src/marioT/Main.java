@@ -14,12 +14,17 @@ public class Main {
     static MarioGraphics marioGraphics = new MarioGraphics();
     static GameLogic gameLogic = new GameLogic();
     static boolean exitPressed = false;
+    static Menu menu = new Menu();
     static Timer timer = new Timer(50, e -> {
         gameLogic.update();
         marioGraphics.repaint();
     });
 
     public static void main(String[] args) {
+        menu.setSize(menu.getToolkit().getScreenSize());
+        menu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        menu.setVisible(true);
+        menu.setContentPane(new JLabel(new ImageIcon("images/MainMenu.png")));
         f.getContentPane().add(marioGraphics);
         Rectangle r = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         DisplayMode dm = new DisplayMode(800, 600, 16, DisplayMode.REFRESH_RATE_UNKNOWN);

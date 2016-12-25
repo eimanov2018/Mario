@@ -18,14 +18,12 @@ public abstract class Menu
     protected int menuItemsCount;
     protected int selectedItem = 1;
     protected GameLogic gameLogic;
-    protected String image;
 
-    public Menu(GameLogic gameLogic, String image)
+    public Menu(GameLogic gameLogic)
     {
         this.gameLogic = gameLogic;
         this.menuItems = menuItems;
         this.menuItemsCount = menuItems.length;
-        this.image = image;
     }
 
     public void draw(Graphics graphics)

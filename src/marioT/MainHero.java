@@ -11,8 +11,8 @@ public class MainHero extends GameObjects implements Observable {
     public int dy = 1;
     public int currentImage = 0;
 
-    //GameLogic gameLogic;
     Obstacle onObstacle = null;
+    Obstacle nearObstacle = null;
     public boolean nitro = false;
     public ArrayList<Observer> observers = new ArrayList<>();
     public boolean jumping = false;
@@ -48,13 +48,17 @@ public class MainHero extends GameObjects implements Observable {
                 coin.setVisibility(false);
             }
         }
+        
+        if(!intersects) jumping = true;
         for (Obstacle obstacle : obstacles) {
             if (obstacle.position.intersects(position)) {
+                transparent = obstacle.transparent;
                 intersects = true;
+                nearObstacle = obstacle;
             }
         }
 
-        if (intersects) {
+        if (intersects && !transparent) {
             position.setBounds(lastX, position.y, position.width, position.height);
             jumping = false;
         }
@@ -66,15 +70,16 @@ public class MainHero extends GameObjects implements Observable {
         intersects = false;
         for (Obstacle obstacle : obstacles) {
             if (obstacle.position.intersects(position)) {
+                transparent = obstacle.transparent;
                 intersects = true;
                 onObstacle = obstacle;
             }
 
         }
-        if (intersects) {
+        
+        if (intersects && !transparent) {
             position.setBounds(position.x, lastY, position.width, position.height);
             jumping = false;
-            //state.jumping = false;
         }
         notifyObservers();
     }
@@ -109,6 +114,15 @@ public class MainHero extends GameObjects implements Observable {
     @Override
     public void unRegister(Observer observer) {
         observers.remove(observer);
+    }
+    public void congrats(int type){
+        Obstacle obstacle = null;
+//        if(obstacle.type == 11) {
+//            visible = false;
+//            transparent = true;
+//        }
+        //obstacle.visible = true;
+        System.out.println("Congratulations!!!");
     }
 
 }

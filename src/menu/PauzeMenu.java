@@ -14,7 +14,7 @@ public class PauzeMenu extends Menu
 {
     public PauzeMenu(GameLogic gameLogic)
     {
-        super(gameLogic, "/images/PauseMenu.png");
+        super(gameLogic);
     }
 
     public void execute()
